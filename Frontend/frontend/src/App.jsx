@@ -4,6 +4,7 @@ import Login from "./Pages/Login";
 import SelectRole from "./Pages/SelectRole";
 import { AuthProvider } from "./context/Authcontext";
 import Home from "./Pages/Home";
+import CropHealthAnalysis from "./Pages/CropHealthAnalysis";
 export default function App() {
   return (
     <BrowserRouter>
@@ -43,6 +44,15 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/analysis"
+            element={
+              <ProtectedRoute>
+                <CropHealthAnalysis />
               </ProtectedRoute>
             }
           />
