@@ -1,0 +1,39 @@
+import mongoose from "mongoose";
+const userSchema = mongoose.Schema({
+    displayName:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName:{
+        type:String,
+        required:true
+    },
+    uid:{
+        type:String,
+        required:true
+    },
+    photoURL:{
+        type:String,
+        required:true
+    },
+    provider:{
+        type:String,
+        default:"Firebase"
+    },
+    role:{
+        type:String,
+        enum:["Officer","Farmer"],
+        default:null
+    }
+},{
+    timestamps:true
+})
+export default mongoose.model("User",userSchema)
