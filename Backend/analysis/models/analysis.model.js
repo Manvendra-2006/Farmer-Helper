@@ -1,0 +1,70 @@
+import mongoose from "mongoose";
+const analysisSchema = mongoose.Schema({
+    cropName:{
+        type:String,
+        required:true
+    },
+    photoURL:{
+        type:String,
+        required:true
+    },
+    cropTypeUse:{
+        type:String,
+        enum:["Food","Feed","Fiber","Oil","Industrial/Cash"],
+        default:null
+    },
+    cropTypeSeason:{
+        type:String,
+        enum:["Kharif","Rabi","Zaid"],
+        default:null
+    },
+    addLocation:{
+        type:{
+            type:String,
+            enum:["Point"],
+            required:true
+        },
+        coordinates:{
+            type:[Number],
+            required:true
+        },
+        formattedAddress:{
+            type:String,
+            required:true
+        }
+    },
+    soilType:{
+        type:String,
+        enum:["Sandy","Clay","Silt","Loamy","Peaty","Chalky"],
+        default:null
+    },
+    growthStage:{
+        type:String,
+        enum:["Seedling","Vegetative","Flowering","Fruiting","Maturity"],
+        default:null
+    },
+    symptoms:{
+        type:String,
+        enum:["Yellow leaves","Brown spots","White powder","Leaf curling","Holes in leaves","Wilting","Insects visible","Other"],
+        default:null
+    },
+    affectedArea:{
+        type:Number,
+        enum:[10,25,50,75,100],
+        required:true
+    },
+    description:{
+        type:String,
+        maxlength:1000,
+        trim:true,
+        default:null
+    },
+    aianalysis:{
+        type:Object,
+        required:true
+    }
+},{
+    timestamps:true
+})
+analysisSchema.index({addLocation:"2dsphere"})
+export default mongoose.model("Analysis",analysisSchema)
