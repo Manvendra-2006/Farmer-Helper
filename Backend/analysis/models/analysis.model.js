@@ -62,6 +62,14 @@ const analysisSchema = mongoose.Schema({
     aianalysis:{
         type:Object,
         required:true
+    },
+    userId:{
+        type:String,
+        required:true
+    },
+    district:{
+        type:String,
+        required:true
     }
 },{
     timestamps:true

@@ -1,9 +1,12 @@
 import express from 'express'
-import jwt, { decode } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import axios from 'axios'
 export async function AuthMiddleware(req,resp,next){
     try{
         const token = req.cookies?.token || req.headers.authorization?.split(" ")[1]
+        console.log("Token requireddddd",token)
         if(!token){
+            console.log("token do bhaiuha")
             return resp.status(404).json({message:"Token Required"})
         }
         const decoded = jwt.verify(token,process.env.JWT_TOKEN)

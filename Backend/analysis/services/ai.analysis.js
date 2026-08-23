@@ -396,34 +396,27 @@ If evidence is insufficient, clearly say so.
 The farmer's safety and crop safety are more important than confidence.
 `;
 
-    const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+    
+const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
 
-        contents: [
-            {
-                role: "user",
-                parts: [
-                    {
-                        fileData: {
-                            fileUri: photoURL,
-                            mimeType: "image/jpeg"
-                        }
-                    },
-                    {
-                        text: prompt
-                    }
-                ]
-            }
-        ],
-
-        config: {
-            tools: [
+    contents: [
+        {
+            role: "user",
+            parts: [
                 {
-                    googleSearch: {}
+                    fileData: {
+                        fileUri: photoURL,
+                        mimeType: "image/jpeg"
+                    }
+                },
+                {
+                    text: prompt
                 }
             ]
         }
-    });
+    ]
+});
 
     console.log("Gemini response received");
 
@@ -435,3 +428,41 @@ The farmer's safety and crop safety are more important than confidence.
 
     return aiResult;
 }
+
+// import { GoogleGenAI } from "@google/genai";
+
+// const ai = new GoogleGenAI({
+//     apiKey: process.env.GEMINI_API_KEY
+// });
+
+// // export async function testGemini() {
+// // const response = await ai.models.generateContent({
+// //     model: "gemini-3.6-flash",
+// //     contents: "Hello"
+// // });
+
+// // console.log(response.text);
+
+// //     console.log(response.text);
+// // }
+
+// const response = await ai.models.generateContent({
+//     model: "gemini-2.5-flash",
+
+//     contents: [
+//         {
+//             role: "user",
+//             parts: [
+//                 {
+//                     fileData: {
+//                         fileUri: photoURL,
+//                         mimeType: "image/jpeg"
+//                     }
+//                 },
+//                 {
+//                     text: prompt
+//                 }
+//             ]
+//         }
+//     ]
+// });
