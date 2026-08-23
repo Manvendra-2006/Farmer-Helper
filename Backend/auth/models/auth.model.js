@@ -32,6 +32,10 @@ const userSchema = mongoose.Schema({
         type:String,
         enum:["Officer","Farmer"],
         default:null
+    },
+    district:{
+        type:String,
+        default:null
     }
 },{
     timestamps:true

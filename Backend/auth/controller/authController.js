@@ -70,7 +70,7 @@ export async function FetchUser(req, resp) {
     }
 }
 
-export async function logout(req,resp) {
+export async function logout(req, resp) {
     try {
         const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token
         if (!token) {
@@ -81,7 +81,7 @@ export async function logout(req,resp) {
             return resp.status(404).json({ message: "User is Unauthorized" })
         }
         const blacklist = await BlackList.create({
-            userId:userData._id,
+            userId: userData._id,
             token
         })
         resp.clearCookie("token", token, {
@@ -98,10 +98,10 @@ export async function logout(req,resp) {
     }
 }
 
-export async function RoleController(req,resp){
-    try{
-        const {role} = req.body
-          const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token
+export async function RoleController(req, resp) {
+    try {
+        const { role } = req.body
+        const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token
         if (!token) {
             return resp.status(400).json({ message: "TOken is required" })
         }
@@ -109,8 +109,8 @@ export async function RoleController(req,resp){
         if (!userData) {
             return resp.status(404).json({ message: "User is Unauthorized" })
         }
-        const roleChange = await User.findByIdAndUpdate(userData._id,{role:role},{returnDocument: 'after',runValidators:true}) // iska mtlb updated schema validation change karo 
-          const tokenRole = jwt.sign(
+        const roleChange = await User.findByIdAndUpdate(userData._id, { role: role }, { returnDocument: 'after', runValidators: true }) // iska mtlb updated schema validation change karo 
+        const tokenRole = jwt.sign(
             { roleChange },
             process.env.JWT_TOKEN,
             { expiresIn: "7d" }
@@ -121,9 +121,59 @@ export async function RoleController(req,resp){
             sameSite: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        return resp.status(200).json({message:"Role updated successfully",roleChange})
-    }   
-    catch(error){
-      return resp.status(500).json({ message: "Internal Server Error", error: error.message })
+        return resp.status(200).json({ message: "Role updated successfully", roleChange })
+    }
+    catch (error) {
+        return resp.status(500).json({ message: "Internal Server Error", error: error.message })
+    }
+}
+
+export async function InternalAPIController(req, resp) {
+    try {
+        if (req.headers["x-internal-key"] !== process.env.INTERNAL_API_KEY) {
+            return resp.status(404).json({ message: "Unauthorized" })
+        }
+        const { id } = req.params
+        if (!id) {
+            return resp.status(404).json({ message: "User Id is required" })
+        }
+        const user = await User.findById(id)
+        if (!user) {
+            return resp.status(404).json({ message: "Unauthorized" })
+        }
+        resp.json({ user })
+    }
+    catch (error) {
+        return resp.status(500).json({ message: "Intenal Server Error", error: error.message })
+    }
+}
+
+export async function DistrictController(req, resp) {
+    try {
+        const { district } = req.body
+        if (!district) {
+            return resp.status(400).json({ message: "district is required" })
+        }
+        const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token
+        if (!token) {
+            return resp.status(400).json({ message: "TOken is required" })
+        }
+        const userData = req.user
+        if (!userData) {
+            return resp.status(404).json({ message: "User is Unauthorized" })
+        }
+        if (userData.role !== "Officer") {
+            return resp.status(403).json({
+                message: "Only officers can update district"
+            })
+        }
+        const districtUpdate = await User.findByIdAndUpdate(userData._id, { district: district }, { returnDocument: "after", runValidators: true })
+        if (!districtUpdate) {
+            return resp.status(400).json({ message: "District is not updated" })
+        }
+        return resp.status(200).json({ message: "District is updated successfully", districtUpdate })
+    }
+    catch (error) {
+        return resp.status(500).json({ message: "Intenal Server Error", error: error.message })
     }
 }
