@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import { initializeApp } from 'firebase/app'
-import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 export const FireBaseContext = createContext()
 const firebaseConfig = {
   apiKey: "AIzaSyD72hN5YWmDSJdLebNldlbLInD5j5nyJrw",
@@ -15,12 +15,16 @@ const firebaseConfig = {
 const firebaseapp = initializeApp(firebaseConfig)
 const firebaseAuth = getAuth(firebaseapp)
 const googleProvider = new GoogleAuthProvider()
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+})
 export const FireBaseProvider = ({children}) => {
     const googleSignup = ()=>{
         return signInWithPopup(firebaseAuth,googleProvider)
     }
+  const googleLogout = ()=> signOut(firebaseAuth)
   return (
-    <FireBaseContext.Provider value={{googleSignup}}>
+  <FireBaseContext.Provider value={{googleSignup, googleLogout}}>
         {children}
     </FireBaseContext.Provider>
   )

@@ -50,8 +50,9 @@ export default function LocationPicker({
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
       );
-      const data = await response.json();
+      const data = await response.json();      
       const address = data.address?.city || data.address?.town || data.address?.county || "Location detected";
+      
       onAddressChange(address);
     } catch (err) {
       console.error("Geocoding failed:", err);

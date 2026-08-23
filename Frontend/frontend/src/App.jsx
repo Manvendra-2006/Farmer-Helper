@@ -5,6 +5,9 @@ import SelectRole from "./Pages/SelectRole";
 import { AuthProvider } from "./context/Authcontext";
 import Home from "./Pages/Home";
 import CropHealthAnalysis from "./Pages/CropHealthAnalysis";
+import CommandCenter from "./Pages/officer/CommandCenter";
+import SelectDistrict from "./Pages/officer/SelectDistrict";
+import DistrictReports from "./Pages/officer/DistrictReports"
 export default function App() {
   return (
     <BrowserRouter>
@@ -38,7 +41,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
+<Route
+  path="/command-center/reports/:filter"
+  element={
+    <ProtectedRoute allowedRoles={["Officer"]}>
+      <DistrictReports />
+    </ProtectedRoute>
+  }
+/>
           <Route
             path="/expert"
             element={
@@ -47,7 +57,9 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route path="/command-center" element={<ProtectedRoute allowedRoles={["Officer"]} requireDistrict><CommandCenter /></ProtectedRoute>} />
+          <Route path="/officer/dashboard" element={<Navigate to="/command-center" replace />} />
+          <Route path="/officer/select-district" element={<ProtectedRoute allowedRoles={["Officer"]}><SelectDistrict /></ProtectedRoute>} />
           <Route
             path="/analysis"
             element={

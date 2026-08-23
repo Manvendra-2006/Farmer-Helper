@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Sprout, UserRound, Check, Loader2 } from "lucide-react";
 import api from "../../axios/auth.axios";
 import { useAuth } from "../context/Authcontext";
+import { officerRouteFor, homeRouteFor, isOfficer } from "../utils/roleRouting";
 
 const ROLES = [
   {
@@ -26,6 +27,7 @@ const API_ROLES = {
   expert: "Officer",
 };
 
+// Where each role lands after selecting / on repeat visits
 export default function SelectRole() {
   const [selectedRole, setSelectedRole] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,7 +37,7 @@ export default function SelectRole() {
 
   useEffect(() => {
     if (currentUser?.role) {
-      navigate("/home", { replace: true });
+      navigate(isOfficer(currentUser) ? officerRouteFor(currentUser) : homeRouteFor(currentUser), { replace: true });
     }
   }, [currentUser, navigate]);
 
@@ -61,8 +63,8 @@ export default function SelectRole() {
       );
       console.log("Role update response:", response.data);
 
-      await fetchCurrentUser(); 
-      navigate("/home", { replace: true });
+      const user = await fetchCurrentUser();
+      navigate(isOfficer(user) ? officerRouteFor(user) : homeRouteFor(user), { replace: true });
     } catch (error) {
       console.error(
         "Role update error:",

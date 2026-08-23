@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sprout, Loader2 } from "lucide-react";
 import { useAuth } from "../context/Authcontext";
+import { homeRouteFor, officerRouteFor } from "../utils/roleRouting";
 
 function getErrorMessage(error) {
   const code = error?.code; 
@@ -40,7 +41,7 @@ export default function Login() {
       const { user } = await loginWithGoogle();
 
       if (user?.role) {
-        navigate("/home", { replace: true });
+        navigate(user?.role?.toLowerCase() === "officer" ? officerRouteFor(user) : homeRouteFor(user), { replace: true });
       } else {
         navigate("/select-role", { replace: true });
       }
@@ -53,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-green-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 via-white to-green-100 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white/80 backdrop-blur rounded-3xl shadow-xl shadow-emerald-900/5 border border-emerald-100 p-8 sm:p-10">
           <div className="flex flex-col items-center text-center mb-8">

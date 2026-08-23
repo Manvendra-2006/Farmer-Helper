@@ -11,7 +11,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-const {googleSignup} = useContext(FireBaseContext)
+const { googleSignup, googleLogout } = useContext(FireBaseContext)
   const fetchCurrentUser = useCallback(async () => {
     try {
       const { data } = await api.get("/auth/account");
@@ -58,7 +58,7 @@ const {googleSignup} = useContext(FireBaseContext)
     try {
       await api.get("/auth/logout");
     } finally {
-    
+      await googleLogout();
       setCurrentUser(null);
     }
   };
