@@ -17,7 +17,7 @@ export async function CreateUser(req, resp) {
             resp.cookie("token", token, {
                 httpOnly: true,
                 secure: true,
-                sameSite: none,
+                sameSite: 'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
             return resp.status(200).json({ message: "User Sign-In ", UserExists })
@@ -39,7 +39,7 @@ export async function CreateUser(req, resp) {
         resp.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: none,
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return resp.status(201).json({ message: "User is created successfully", UserExists })
@@ -87,7 +87,7 @@ export async function logout(req, resp) {
         resp.clearCookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: none,
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return resp.status(200).json({ message: "User logout successfully" })
@@ -118,7 +118,7 @@ export async function RoleController(req, resp) {
         resp.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: none,
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         return resp.status(200).json({ message: "Role updated successfully", roleChange })
