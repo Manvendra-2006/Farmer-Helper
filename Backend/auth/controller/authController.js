@@ -16,7 +16,7 @@ export async function CreateUser(req, resp) {
             )
             resp.cookie("token", token, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
@@ -38,7 +38,7 @@ export async function CreateUser(req, resp) {
         )
         resp.cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
@@ -86,7 +86,7 @@ export async function logout(req, resp) {
         })
         resp.clearCookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
@@ -117,7 +117,7 @@ export async function RoleController(req, resp) {
         )
         resp.cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
