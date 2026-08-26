@@ -3,9 +3,9 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import api from "../../../axios/analysis.axios";
 import { useAuth } from "../../context/Authcontext";
-import AnalysisDetailModal from "../../componenet/dashboard/AnalysisDetailModal";
 import { normalizeSeverity } from "../../componenet/dashboard/severity";
 import AnalysisListTable from "./AnalysisListTable";
+import AnalysisDetailModal from "../../componenet/dashboard/AnalysisDetailModal";
 // filter -> { title, match(analysis) -> boolean }
 const FILTERS = {
   total: {
@@ -75,6 +75,13 @@ export default function DistrictReports() {
     return analyses.filter(config.match);
   }, [analyses, config]);
 
+  const handleStatusUpdate = (updatedAnalysis) => {
+    setAnalyses((prev) =>
+      (prev || []).map((a) => (a._id === updatedAnalysis._id ? updatedAnalysis : a))
+    );
+    setSelectedAnalysis(updatedAnalysis);
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-green-100">
       <nav className="flex items-center justify-between px-6 py-4 bg-white/70 backdrop-blur border-b border-emerald-100">
@@ -113,6 +120,7 @@ export default function DistrictReports() {
       <AnalysisDetailModal
         analysis={selectedAnalysis}
         onClose={() => setSelectedAnalysis(null)}
+        onStatusUpdate={handleStatusUpdate}
       />
     </div>
   );

@@ -43,6 +43,7 @@ export default function SymptomsSelector({
             return (
               <button
                 key={symptom}
+                type="button"
                 onClick={() => onSymptomToggle(symptom)}
                 className={`relative px-4 py-3 rounded-lg font-medium text-sm transition-all border-2 text-left ${
                   isSelected

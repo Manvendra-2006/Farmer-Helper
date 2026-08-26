@@ -39,6 +39,7 @@ export default function CropInformationForm({
       <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
       <div className="relative">
         <button
+          type="button"
           onClick={() => setOpenDropdown(openDropdown === fieldName ? null : fieldName)}
           className={`w-full px-4 py-3 text-left bg-white border-2 rounded-lg font-medium transition-all flex items-center justify-between ${
             error ? "border-red-300 bg-red-50" : "border-slate-200 hover:border-emerald-400"
@@ -68,6 +69,7 @@ export default function CropInformationForm({
             {(fieldName === "crop" ? filteredCrops : options).map((option) => (
               <button
                 key={option}
+                type="button"
                 onClick={() => {
                   onChange(option);
                   setOpenDropdown(null);

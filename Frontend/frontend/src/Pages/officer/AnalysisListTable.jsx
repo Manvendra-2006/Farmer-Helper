@@ -1,6 +1,5 @@
-import { SeverityBadge ,normalizeSeverity} from "../../componenet/dashboard/severity";
-// userId may come back as a plain string or, if the backend populates it,
-// an object with the farmer's name/village — this handles either shape.
+import { StatusBadge } from "../../componenet/dashboard/status";
+import { SeverityBadge,normalizeSeverity } from "../../componenet/dashboard/severity";
 function farmerLabel(userId) {
   if (!userId) return "Unknown farmer";
   if (typeof userId === "string") return userId.slice(-6);
@@ -8,10 +7,6 @@ function farmerLabel(userId) {
     ? `${userId.firstName} ${userId.lastName || ""}`.trim()
     : userId._id?.slice(-6) || "Unknown farmer";
 }
-
-// Renders whatever list is passed in — no severity filtering here, the
-// caller decides what belongs in the list (all reports, just high-risk,
-// just moderate, etc).
 export default function AnalysisListTable({ analyses, onSelect, emptyText }) {
   const rows = [...analyses].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -36,6 +31,7 @@ export default function AnalysisListTable({ analyses, onSelect, emptyText }) {
             <th className="py-2 pr-4 font-medium">Category</th>
             <th className="py-2 pr-4 font-medium">Location</th>
             <th className="py-2 pr-4 font-medium">Severity</th>
+            <th className="py-2 pr-4 font-medium">Status</th>
             <th className="py-2 pr-4 font-medium">Reported</th>
           </tr>
         </thead>
@@ -61,6 +57,9 @@ export default function AnalysisListTable({ analyses, onSelect, emptyText }) {
               </td>
               <td className="py-3 pr-4">
                 <SeverityBadge severity={normalizeSeverity(a)} />
+              </td>
+              <td className="py-3 pr-4">
+                <StatusBadge status={a.status} />
               </td>
               <td className="py-3 pr-4 text-slate-500">
                 {new Date(a.createdAt).toLocaleDateString("en-IN")}

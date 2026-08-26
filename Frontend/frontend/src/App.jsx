@@ -8,6 +8,8 @@ import CropHealthAnalysis from "./Pages/CropHealthAnalysis";
 import CommandCenter from "./Pages/officer/CommandCenter";
 import SelectDistrict from "./Pages/officer/SelectDistrict";
 import DistrictReports from "./Pages/officer/DistrictReports"
+import WeatherAnalytics from "./Pages/officer/WeatherAnalytics";
+import MyReports from "./Pages/farmer/MyReports";
 export default function App() {
   return (
     <BrowserRouter>
@@ -32,7 +34,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
+<Route
+  path="/my-reports"
+  element={
+    <ProtectedRoute allowedRoles={["Farmer"]}>
+      <MyReports />
+    </ProtectedRoute>
+  }
+/>
           <Route
             path="/farmer"
             element={
@@ -46,6 +55,14 @@ export default function App() {
   element={
     <ProtectedRoute allowedRoles={["Officer"]}>
       <DistrictReports />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/command-center/weather"
+  element={
+    <ProtectedRoute allowedRoles={["Officer","Farmer"]}>
+      <WeatherAnalytics />
     </ProtectedRoute>
   }
 />

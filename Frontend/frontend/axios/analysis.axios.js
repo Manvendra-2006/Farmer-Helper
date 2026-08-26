@@ -4,7 +4,7 @@ import axios from "axios";
 // HTTP-only cookie for JWT — without this, the browser won't
 // send/receive that cookie on cross-origin requests.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:2000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://farmer-helper-2.onrender.com/api",
   withCredentials: true,
 });
 

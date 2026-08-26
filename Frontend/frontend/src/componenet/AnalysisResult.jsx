@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, Zap, Leaf, Bug, Droplet, Shield, MapPin, RefreshCw } from "lucide-react";
+import { AlertCircle, CheckCircle, Zap, Leaf, Bug, Droplet, Shield, MapPin, RefreshCw, Eye } from "lucide-react";
 
 // Result Card Components
 export function DiagnosisCard({ diagnosis }) {
@@ -116,10 +116,10 @@ export function TreatmentCard({ treatment }) {
   if (!treatment) return null;
 
   const sections = [
-    { key: "biological", icon: Leaf, label: "Biological Control", color: "green" },
-    { key: "chemical", icon: Bug, label: "Chemical Control", color: "orange" },
-    { key: "cultural", icon: Droplet, label: "Cultural Practices", color: "blue" },
-    { key: "soil", icon: Droplet, label: "Soil & Water Management", color: "cyan" },
+    { key: "biologicalControl", icon: Leaf, label: "Biological Control", color: "green" },
+    { key: "chemicalControl", icon: Bug, label: "Chemical Control", color: "orange" },
+    { key: "culturalPractices", icon: Droplet, label: "Cultural Practices", color: "blue" },
+    { key: "soilAndWaterManagement", icon: Droplet, label: "Soil & Water Management", color: "cyan" },
   ];
 
   return (
@@ -209,7 +209,10 @@ export function FarmerChecksCard({ checks }) {
         {checks.map((check, idx) => (
           <div key={idx} className="flex gap-3 p-3 bg-indigo-50 rounded-lg">
             <span className="text-indigo-600 font-bold shrink-0">→</span>
-            <p className="text-slate-700">{check}</p>
+            <div className="text-slate-700">
+              <p className="font-medium">{check.check}</p>
+              {check.whatToLookFor && <p className="text-sm mt-1">{check.whatToLookFor}</p>}
+            </div>
           </div>
         ))}
       </div>
@@ -286,7 +289,9 @@ export function DiagnosticLimitationsCard({ limitations }) {
 }
 
 export default function AnalysisResult({ analysis, onNewAnalysis }) {
-  if (!analysis?.aiAnalysis) {
+  const ai = analysis?.aianalysis;
+
+  if (!ai) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
         <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-3" />
@@ -295,7 +300,6 @@ export default function AnalysisResult({ analysis, onNewAnalysis }) {
     );
   }
 
-  const ai = analysis.aiAnalysis;
   const summary = ai.summary || {};
   const cropHealth = ai.cropHealth || {};
 
@@ -317,8 +321,8 @@ export default function AnalysisResult({ analysis, onNewAnalysis }) {
         {summary && <DiagnosisCard diagnosis={summary} />}
 
         {/* Explanation */}
-        {summary.simpleExplanation && (
-          <ExplanationCard explanation={summary.simpleExplanation} />
+        {summary.shortExplanation && (
+          <ExplanationCard explanation={summary.shortExplanation} />
         )}
 
         {/* Visible Symptoms */}
@@ -330,16 +334,16 @@ export default function AnalysisResult({ analysis, onNewAnalysis }) {
         {ai.possibleCauses && <CausesCard causes={ai.possibleCauses} />}
 
         {/* Immediate Actions */}
-        {ai.recommendedActions?.immediateActions && (
-          <ImmediateActionsCard actions={ai.recommendedActions.immediateActions} />
+        {ai.recommendedActions?.immediate && (
+          <ImmediateActionsCard actions={ai.recommendedActions.immediate} />
         )}
 
         {/* Treatment */}
         {ai.treatmentDetails && <TreatmentCard treatment={ai.treatmentDetails} />}
 
         {/* Prevention */}
-        {ai.treatmentDetails?.prevention && (
-          <PreventionCard prevention={ai.treatmentDetails.prevention} />
+        {ai.recommendedActions?.prevention && (
+          <PreventionCard prevention={ai.recommendedActions.prevention} />
         )}
 
         {/* Farmer Checks */}

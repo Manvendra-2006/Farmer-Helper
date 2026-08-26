@@ -77,6 +77,7 @@ export default function LocationPicker({
           </div>
 
           <button
+            type="button"
             onClick={() => setManualEntry(true)}
             className="w-full py-3 px-4 border-2 border-slate-300 hover:border-emerald-400 text-slate-600 hover:text-emerald-600 font-medium rounded-xl transition-colors"
           >
@@ -86,6 +87,7 @@ export default function LocationPicker({
       ) : (
         <div className="space-y-4">
           <button
+            type="button"
             onClick={getLocation}
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-400 text-white font-semibold py-3 px-4 rounded-xl transition-colors"

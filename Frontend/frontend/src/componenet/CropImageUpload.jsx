@@ -76,6 +76,7 @@ export default function CropImageUpload({
               className="w-full h-64 sm:h-80 object-cover"
             />
             <button
+              type="button"
               onClick={() => onImageRemove()}
               className="absolute top-3 right-3 p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
               aria-label="Remove image"
@@ -94,6 +95,7 @@ export default function CropImageUpload({
           </div>
 
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
             className="w-full py-3 px-4 border-2 border-slate-300 hover:border-emerald-400 text-slate-600 hover:text-emerald-600 font-medium rounded-xl transition-colors"
           >
@@ -145,7 +147,7 @@ export default function CropImageUpload({
 
       {error && (
         <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
           <p className="text-sm text-red-700">{error}</p>
         </div>
       )}
