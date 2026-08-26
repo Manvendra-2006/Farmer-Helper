@@ -13,7 +13,7 @@ export async function AuthMiddleware(req,resp,next){
         if(!decoded){
             return resp.status(404).json({message:"Token is expired"})
         }
-        const user = await axios.get(`http://localhost:1000/api/auth/internal-api/${decoded.UserExists._id}`,{
+        const user = await axios.get(`https://farmer-helper-3.onrender.com/api/auth/internal-api/${decoded.UserExists._id}`,{
             headers:{
                 "x-internal-key":process.env.INTERNAL_API_KEY
             }
@@ -22,6 +22,7 @@ export async function AuthMiddleware(req,resp,next){
             return resp.status(401).json({message:"Unauthorized User"})
         }
         req.user = user
+        console.log("ye apen bahi ka hain",req.user.data.user._id)
         next()
     }
     catch(error){

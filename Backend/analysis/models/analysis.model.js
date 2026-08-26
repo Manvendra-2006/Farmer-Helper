@@ -10,12 +10,12 @@ const analysisSchema = mongoose.Schema({
     },
     cropTypeUse:{
         type:String,
-        enum:["Food","Feed","Fiber","Oil","Industrial/Cash"],
+        enum:["Food","Fodder","Fiber","Oilseed","Commercial","Other"],
         default:null
     },
     cropTypeSeason:{
         type:String,
-        enum:["Kharif","Rabi","Zaid"],
+        enum:["Kharif","Rabi","Zaid","Summer","Winter","Other"],
         default:null
     },
     addLocation:{
@@ -35,22 +35,21 @@ const analysisSchema = mongoose.Schema({
     },
     soilType:{
         type:String,
-        enum:["Sandy","Clay","Silt","Loamy","Peaty","Chalky"],
+        enum:["Sandy","Clay","Loamy","Black Soil","Red Soil","Alluvial","Laterite","Other","Don't Know"],
         default:null
     },
     growthStage:{
         type:String,
-        enum:["Seedling","Vegetative","Flowering","Fruiting","Maturity"],
+        enum:["Seedling","Vegetative","Flowering","Fruiting","Grain Formation","Maturity","Harvest","Don't Know"],
         default:null
     },
     symptoms:{
         type:String,
-        enum:["Yellow leaves","Brown spots","White powder","Leaf curling","Holes in leaves","Wilting","Insects visible","Other"],
         default:null
     },
     affectedArea:{
-        type:Number,
-        enum:[10,25,50,75,100],
+        type:String,
+        enum:["One plant","Few plants","Small area","Large area","Most of the field","Entire field"],
         required:true
     },
     description:{
@@ -70,7 +69,34 @@ const analysisSchema = mongoose.Schema({
     district:{
         type:String,
         required:true
-    }
+    },
+    status: {
+    type: String,
+    enum: ["Pending Review", "Verified", "False Positive", "Action Taken", "Resolved"],
+    default: "Pending Review"
+},
+officerNote: {
+    type: String,
+    default: null
+},
+reviewedBy: {
+    type:"String",
+    default: null
+},
+reviewedAt: {
+    type: Date,
+    default: null
+},
+followUps: [{
+    scheduledDate: { type: Date, required: true },
+    status: { type: String, enum: ["Scheduled", "Completed", "Missed"], default: "Scheduled" },
+    notes: { type: String, default: null },
+    improvementStatus: { type: String, enum: ["Improved", "No Change", "Worsened"], default: null },
+    outcomeNotes: { type: String, default: null },
+    completedAt: { type: Date, default: null },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    createdAt: { type: Date, default: Date.now }
+}],
 },{
     timestamps:true
 })

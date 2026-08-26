@@ -1,25 +1,27 @@
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
+import 'dotenv/config'
+import OpenAI from "openai";
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function AnalysisFarmerCropByAi({
-    photoURL,
-    cropName,
-    cropTypeUse,
-    cropTypeSeason,
-    latitude,
-    longitude,
-    soilType,
-    growthStage,
-    symptoms,
-    affectedArea,description,formattedAddress
+  photoURL,
+  cropName,
+  cropTypeUse,
+  cropTypeSeason,
+  latitude,
+  longitude,
+  soilType,
+  growthStage,
+  symptoms,
+  affectedArea,
+  description,
+  formattedAddress,
 }) {
-
-    console.log("Analyze photoURL:", photoURL);
-
-    const prompt = `
+  console.log("Analyze photoURL:", photoURL);
+console.log(process.env.OPENAI_MODEL)
+console.log(process.env.OPENAI_API_KEY)
+ const prompt = `
 You are an expert AI agricultural diagnostic assistant specializing in crop
 disease diagnosis, pest identification, nutrient deficiencies, plant pathology,
 agronomy, crop management, and agricultural advisory services.
@@ -151,7 +153,68 @@ Determine whether the image is consistent with:
 10. healthy plant condition
 
 Do not diagnose only from visual similarity.
+========================
+CROP HEALTH SEVERITY ASSESSMENT
+========================
 
+You MUST determine the crop health severity.
+
+Severity must be one of exactly these values:
+
+- "Low"
+- "Moderate"
+- "High"
+- "Critical"
+
+Determine severity using ALL available evidence:
+
+1. Visible symptom intensity in the image
+2. Percentage of affected crop area
+3. Number and distribution of affected leaves/plants
+4. Whether symptoms are localized or spreading
+5. Type of suspected disease, pest, or stress
+6. Growth stage of the crop
+7. Whether the condition can significantly affect crop yield
+8. Farmer-reported symptoms
+9. Visual evidence from the image
+
+Use affectedArea as an important supporting factor, but DO NOT determine
+severity using affectedArea alone.
+
+General guidance:
+
+Low:
+- Minor or limited symptoms
+- Small localized affected area
+- No major damage visible
+- Crop growth appears mostly normal
+
+Moderate:
+- Clearly visible symptoms
+- Noticeable affected area
+- Some reduction in plant health
+- Condition requires monitoring and timely action
+
+High:
+- Significant visible damage
+- Symptoms affecting a large portion of the crop
+- Rapid spreading is suspected
+- Potential significant impact on crop growth or yield
+
+Critical:
+- Very severe or widespread damage
+- Large portion of crop appears severely affected
+- Immediate expert intervention may be required
+- High risk of major crop loss
+
+IMPORTANT:
+
+Always return one severity value.
+
+Never leave severity empty.
+
+Use exactly one of:
+"Low", "Moderate", "High", "Critical"
 ========================
 EVIDENCE CROSS-CHECK
 ========================
@@ -300,16 +363,16 @@ Use exactly this structure:
     "status": "",
     "primaryDiagnosis": "",
     "category": "",
-    "confidence": 0,
+    "confidence":"",
     "shortExplanation": ""
   },
 
-  "cropHealth": {
-    "overallCondition": "",
-    "severity": "",
-    "affectedArea": "",
-    "visibleSymptoms": []
-  },
+ "cropHealth": {
+  "overallCondition": "",
+  "severity": "Low",
+  "affectedArea": "",
+  "visibleSymptoms": []
+}
 
   "primaryDiagnosisDetails": {
     "name": "",
@@ -396,73 +459,53 @@ If evidence is insufficient, clearly say so.
 The farmer's safety and crop safety are more important than confidence.
 `;
 
-    
-const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+  try {
+    const response = await openai.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
 
-    contents: [
+      input: [
         {
-            role: "user",
-            parts: [
-                {
-                    fileData: {
-                        fileUri: photoURL,
-                        mimeType: "image/jpeg"
-                    }
-                },
-                {
-                    text: prompt
-                }
-            ]
-        }
-    ]
-});
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: prompt,
+            },
+            {
+              type: "input_image",
+              image_url: photoURL,
+            },
+          ],
+        },
+      ],
 
-    console.log("Gemini response received");
+      text: {
+        format: {
+          type: "json_object",
+        },
+      },
+    });
 
-    const text = response.text;
+    console.log("OpenAI response received");
+
+    const text = response.output_text;
+    if (!text) {
+      throw new Error("OpenAI returned an empty analysis response");
+    }
 
     console.log("AI OUTPUT:", text);
 
     const aiResult = JSON.parse(text);
 
     return aiResult;
+  } catch (error) {
+    console.error("OpenAI Crop Analysis Error:", {
+      message: error.message,
+      status: error.status,
+      code: error.code,
+      type: error.type
+    });
+
+    throw new Error(error.message || "Crop analysis failed");
+  }
 }
-
-// import { GoogleGenAI } from "@google/genai";
-
-// const ai = new GoogleGenAI({
-//     apiKey: process.env.GEMINI_API_KEY
-// });
-
-// // export async function testGemini() {
-// // const response = await ai.models.generateContent({
-// //     model: "gemini-3.6-flash",
-// //     contents: "Hello"
-// // });
-
-// // console.log(response.text);
-
-// //     console.log(response.text);
-// // }
-
-// const response = await ai.models.generateContent({
-//     model: "gemini-2.5-flash",
-
-//     contents: [
-//         {
-//             role: "user",
-//             parts: [
-//                 {
-//                     fileData: {
-//                         fileUri: photoURL,
-//                         mimeType: "image/jpeg"
-//                     }
-//                 },
-//                 {
-//                     text: prompt
-//                 }
-//             ]
-//         }
-//     ]
-// });
