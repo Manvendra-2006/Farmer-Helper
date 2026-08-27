@@ -4,6 +4,7 @@ import { Sprout, UserRound, Check, Loader2 } from "lucide-react";
 import api from "../../axios/auth.axios";
 import { useAuth } from "../context/Authcontext";
 import { officerRouteFor, homeRouteFor, isOfficer } from "../utils/roleRouting";
+import { setAuthToken } from "../context/authToken";
 
 const ROLES = [
   {
@@ -62,6 +63,7 @@ export default function SelectRole() {
         { withCredentials: true }
       );
       console.log("Role update response:", response.data);
+      if (response.data.token) setAuthToken(response.data.token);
 
       const user = await fetchCurrentUser();
       navigate(isOfficer(user) ? officerRouteFor(user) : homeRouteFor(user), { replace: true });

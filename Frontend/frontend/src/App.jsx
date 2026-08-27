@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./componenet/ProtectedRoute";
 import Login from "./Pages/Login";
 import SelectRole from "./Pages/SelectRole";
-import { AuthProvider } from "./context/Authcontext";
 import Home from "./Pages/Home";
 import CropHealthAnalysis from "./Pages/CropHealthAnalysis";
 import CommandCenter from "./Pages/officer/CommandCenter";
@@ -13,8 +12,7 @@ import MyReports from "./Pages/farmer/MyReports";
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
+      <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
 
           <Route path="/login" element={<Login />} />
@@ -87,8 +85,7 @@ export default function App() {
           />
 
           <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </AuthProvider>
+      </Routes>
     </BrowserRouter>
   );
 }

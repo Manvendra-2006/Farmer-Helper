@@ -7,6 +7,7 @@ import {
 } from "react";
 import api from "../../axios/auth.axios";
 import { FireBaseContext } from "./FireBaseProvider";
+import { clearAuthToken, setAuthToken } from "./authToken";
 const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -15,9 +16,11 @@ const { googleSignup, googleLogout } = useContext(FireBaseContext)
   const fetchCurrentUser = useCallback(async () => {
     try {
       const { data } = await api.get("/auth/account");
+      if (data.token) setAuthToken(data.token);
       setCurrentUser(data.UserData);
       return data.UserData;
     } catch (error) {
+      clearAuthToken();
       setCurrentUser(null);
       return null;
     } finally {
@@ -50,6 +53,7 @@ const { googleSignup, googleLogout } = useContext(FireBaseContext)
       lastName,
     });
 
+    setAuthToken(data.token);
     const user = await fetchCurrentUser();
     return { ...data, user };
   };
@@ -59,6 +63,7 @@ const { googleSignup, googleLogout } = useContext(FireBaseContext)
       await api.get("/auth/logout");
     } finally {
       await googleLogout();
+      clearAuthToken();
       setCurrentUser(null);
     }
   };

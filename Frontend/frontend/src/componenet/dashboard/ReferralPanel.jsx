@@ -43,7 +43,8 @@ export default function ReferralPanel({ analysisId, readOnly = false }) {
   const loadReferrals = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get(`/farmer/referral/analysis/${analysisId}`);
+      const { data } = await api.get(`/farmer/referral/analysis/${analysisId}`,
+      );
       setReferrals(data.referrals || []);
     } catch (err) {
       console.error("Failed to load referrals:", err);
