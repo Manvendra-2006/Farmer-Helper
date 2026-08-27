@@ -459,3 +459,24 @@ export async function getDistrictWeatherForecastController(req, resp) {
         return resp.status(500).json({ message: "Internal Server Error", error: error.message })
     }
 }
+export async function getDueFollowUpsController(req, resp) {
+    try {
+        const district = req.params?.district
+        if (!district) {
+            return resp.status(400).json({ message: "District required" })
+        }
+
+        const today = new Date()
+        today.setHours(23, 59, 59, 999)
+
+        const analyses = await Analysis.find({
+            district,
+            followUps: { $elemMatch: { status: "Scheduled", scheduledDate: { $lte: today } } }
+        })
+
+        return resp.status(200).json({ message: "Due follow-ups fetched successfully", analyses })
+    }
+    catch (error) {
+        return resp.status(500).json({ message: "Internal Server Error", error: error.message })
+    }
+}

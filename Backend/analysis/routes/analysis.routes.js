@@ -1,5 +1,5 @@
 import express from 'express'
-import { AnalysisController, getALlDistrictBasisAnalysis, getMyAnalysesController,getAnalysisById ,updateAnalysisStatusController,scheduleFollowUpController,completeFollowUpController,getDistrictWeatherRiskController,getDistrictWeatherForecastController} from '../controller/analysis.controller.js'
+import { AnalysisController,getDueFollowUpsController, getALlDistrictBasisAnalysis, getMyAnalysesController,getAnalysisById ,updateAnalysisStatusController,scheduleFollowUpController,completeFollowUpController,getDistrictWeatherRiskController,getDistrictWeatherForecastController} from '../controller/analysis.controller.js'
 import uploadFile from '../middleware/multer.middleware.js'
 import { AuthMiddleware } from '../middleware/authmiddleware.js'
 const analysisRouter  = express.Router()
@@ -12,4 +12,5 @@ analysisRouter.patch('/analysis/:id/followup/:followupId', AuthMiddleware, compl
 analysisRouter.get('/weather-risk/:district', AuthMiddleware, getDistrictWeatherRiskController)
 analysisRouter.get('/weather-forecast/:district', AuthMiddleware, getDistrictWeatherForecastController)
 analysisRouter.get('/analysis/mine', AuthMiddleware, getMyAnalysesController)
+analysisRouter.get('/followups/due/:district', AuthMiddleware, getDueFollowUpsController)
 export default analysisRouter
