@@ -20,7 +20,7 @@ export async function CreateUser(req, resp) {
                 sameSite: 'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
-            return resp.status(200).json({ message: "User Sign-In ", UserExists })
+            return resp.status(200).json({ message: "User Sign-In ", UserExists, token })
         }
 
         UserExists = await User.create({
@@ -42,7 +42,7 @@ export async function CreateUser(req, resp) {
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        return resp.status(201).json({ message: "User is created successfully", UserExists })
+        return resp.status(201).json({ message: "User is created successfully", UserExists, token })
     }
     catch (error) {
         return resp.status(500).json({ message: "Internal Server Error", error: error.message })
@@ -62,7 +62,7 @@ export async function FetchUser(req, resp) {
         if (!UserData) {
             return resp.status(404).json({ message: "User is Unauthorized" })
         }
-        return resp.status(200).json({ message: "User Data Fetched successfully", UserData })
+        return resp.status(200).json({ message: "User Data Fetched successfully", UserData, token })
     }
     catch (error) {
         return resp.status(500).json({ message: "Internal Server Error", error: error.message })
@@ -111,17 +111,17 @@ export async function RoleController(req, resp) {
         }
         const roleChange = await User.findByIdAndUpdate(userData._id, { role: role }, { returnDocument: 'after', runValidators: true }) // iska mtlb updated schema validation change karo 
         const tokenRole = jwt.sign(
-            { roleChange },
+            { UserExists: roleChange },
             process.env.JWT_TOKEN,
             { expiresIn: "7d" }
         )
-        resp.cookie("token", token, {
+        resp.cookie("token", tokenRole, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        return resp.status(200).json({ message: "Role updated successfully", roleChange })
+        return resp.status(200).json({ message: "Role updated successfully", roleChange, token: tokenRole })
     }
     catch (error) {
         return resp.status(500).json({ message: "Internal Server Error", error: error.message })
