@@ -67,7 +67,7 @@ export default function CommandCenter() {
     const loadDueFollowUps = async () => {
       try {
         const { data } = await api.get(
-          `/farmer/followups/due/${encodeURIComponent(districtName)}`
+          `/farmer/followups/due/${districtName}`
         );
         setDueFollowUps(data.analyses || []);
       } catch (err) {
@@ -242,7 +242,7 @@ export default function CommandCenter() {
             <div className="flex justify-end mb-6">
               <button
                 type="button"
-                onClick={() => load(true)}
+                onClick={() => loadAnalyses(true)}
                 disabled={refreshing}
                 className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 disabled:opacity-50"
               >
