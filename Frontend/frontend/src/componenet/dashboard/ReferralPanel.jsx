@@ -43,7 +43,7 @@ export default function ReferralPanel({ analysisId, readOnly = false }) {
   const loadReferrals = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get(`/farmer/referral/analysis/${analysisId}`,
+      const { data } = await api.get(`/admin/referral/analysis/${analysisId}`,
       );
       setReferrals(data.referrals || []);
     } catch (err) {
@@ -66,7 +66,7 @@ export default function ReferralPanel({ analysisId, readOnly = false }) {
     setSubmitting(true);
     setError("");
     try {
-      const { data } = await api.post("/farmer/referral", {
+      const { data } = await api.post("/admin/referral", {
         analysisId,
         ...form,
       });
@@ -84,7 +84,7 @@ export default function ReferralPanel({ analysisId, readOnly = false }) {
   const handleStatusChange = async (referralId, status) => {
     setUpdatingId(referralId);
     try {
-      const { data } = await api.patch(`/farmer/referral/${referralId}/status`, {
+      const { data } = await api.patch(`/admin/referral/${referralId}/status`, {
         status,
       });
       setReferrals((prev) =>
