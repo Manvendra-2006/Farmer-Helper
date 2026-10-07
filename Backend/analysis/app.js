@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 import referralRouter from './routes/referral.routes.js'
 const app = express()
 app.use(cors({
-    origin:"https://farmer-helper-smoky.vercel.app",
+    origin:"https://farmer-helper-eta.vercel.app",
     credentials:true
 }))
 app.use(cookieParser())
