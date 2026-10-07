@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser'
 import authRouter from './routes/auth.routes.js'
 const app = express()
 app.use(cors({
-    origin:"https://farmer-helper-smoky.vercel.app",
+    origin:"https://farmer-helper-eta.vercel.app",
     credentials:true
 }))
 app.use(cookieParser())
